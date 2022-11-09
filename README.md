@@ -2,6 +2,22 @@
 
 This repository contains [Jupyter](https://jupyter.org) notebooks for training [word2vec](https://en.wikipedia.org/wiki/Word2vec) and querying models for Ancient Greek.
 
+## Dependencies
+
+You will need to install [Gensim](https://radimrehurek.com/gensim/models/word2vec.html) to use the notebooks in this repo. Both notebooks attempt to install it in case it is missing:
+
+```python
+try:
+    from collections.abc import Mapping
+    from gensim.models.word2vec import Word2Vec
+except:
+    !pip install -I gensim
+    from collections.abc import Mapping
+    from gensim.models.word2vec import Word2Vec
+```
+
+Before running these scripts, therefore, you should ensure you are working in a virtual env using [Conda](https://docs.conda.io/en/latest/) or some alternative.
+
 ## Get most similar terms
 
 The notebook `query_w2v_model.ipynb` contains code to load up an existing model and query it. Once the code runs successfully through, you can query additional terms by imitating the example code.
