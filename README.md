@@ -41,12 +41,53 @@ For example, querying 'ἀρχιερεύς' ('high priest') using `model.most_si
 
 The notebook `build_greek_w2v_model.ipynb` contains code to train your own model, including specifying a data directory and setting hyperparameters such as vector size, context window size, etc.
 
+You can also change the neural network type (either skip-gram or continuous bag-of-words). Anecdotally, I find the CBOW to work better for lemmatized comparisons. For example, for the term λόγος ('word'/'reason'/'account'/etc.), compare the following results:
+
+```python
+# Skip-gram
+
+[('ἀξιομνημόνευτος', 0.6042230129241943),
+ ('ἐφεκτέον', 0.6000658869743347),
+ ('ψευδοδοξία', 0.589237630367279),
+ ('λογοποιία', 0.5858883261680603),
+ ('ἐξεταστικός', 0.5815737247467041),
+ ('ἀκριβολογία', 0.5795413851737976),
+ ('ὑφήγησις', 0.5784241557121277),
+ ('ἀναμφίλεκτος', 0.5765267014503479),
+ ('ἰσοσθένεια', 0.5729403495788574),
+ ('εἰσαγωγικός', 0.5722008347511292)]
+
+# CBOW
+
+[('ἑρμηνεία', 0.5288925766944885),
+ ('ἐξήγησις', 0.5065293312072754),
+ ('θεολογία', 0.4956413805484772),
+ ('διδασκαλία', 0.48970848321914673),
+ ('ὑπόληψις', 0.47546130418777466),
+ ('διήγησις', 0.47397667169570923),
+ ('σκέψις', 0.47282832860946655),
+ ('θεωρία', 0.47240814566612244),
+ ('διαλέγω', 0.4657094478607178),
+ ('φυσιολογία', 0.4602492153644562)]
+
+```
+
+The skip-gram approach may work better with a higher `min_count_input` (10? 100?) to exclude rare lemmas.
+
 Theoretically you could use just about any language data in plaintext format as input. The data is contained in the `data/corpus` subdirectory, and consists of a set of plaintext files that end with the `.txt` extension. 
 
-The format for this data is one-sentence per line. 
+The format for the input data is one-sentence per line. 
 
-The data included in this repository is lemmatized, with 19053248 lemmas (check using `cat data/corpus/*.txt | wc -w` in the repository root).
+## Corpora
 
-It has been extracted from [LemmatizedAncientGreekXML](https://github.com/gcelano/LemmatizedAncientGreekXML). Thank you, [Giuseppe](https://github.com/gcelano)!
+The data included in this repository is lemmatized, with 19,053,248 lemmas in `data/corpus` (check using `cat data/corpus/*.txt | wc -w` in the repository root).
+
+The files under `data/papyri` includes 1,759,488 lemmas (check using `find data/papyri -type f -name "*.txt" -exec cat {} + | wc -w` to avoid the 'argument list too long' error).
+
+This data has been extracted from [LemmatizedAncientGreekXML](https://github.com/gcelano/LemmatizedAncientGreekXML) and [MALP](https://github.com/gcelano/MALP). Thank you, [Giuseppe](https://github.com/gcelano)!
 
 TODO: There are some zero-byte files in the corpus. Presumably, no lemmas were extracted for these files. This should be investigated in order to increase the corpus size.
+
+TODO: Add [ngram](https://radimrehurek.com/gensim/models/word2vec.html#embeddings-with-multiword-ngrams) detection preprocessing option
+
+TODO: Add FastText sub-word model
